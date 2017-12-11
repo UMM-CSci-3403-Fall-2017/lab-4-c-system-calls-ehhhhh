@@ -10,23 +10,28 @@ bool is_vowel(char c) {
 
 	int i = 0;
 
-	while(i<11 && a != vowels[i]) {
+	while(i<11 && c != vowels[i]) {
 		++i;
 	}
-	
+		
 	return (i!=11);
 }
 
 int copy_non_vowels(int num_chars, char* in_buf, char* out_buf) {
-	
-	for(int i = 0; i < BUF_SIZE; i++) {
-		if (isVowel(in_buf[i])) {
+
+	int j = 0;
+
+	int nonvowels = 0;
+
+	for(int i = 0; i < num_chars; i++) {
+		if (!is_vowel(in_buf[i])) {
 			out_buf[j] = in_buf[i];
 			j++;
+			nonvowels++;
 		}
 	}
 
-	return j;
+	return nonvowels;
 
 }
 
@@ -34,25 +39,23 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
 
 	int inputSize = BUF_SIZE;
 
+	int outputSize = 0;
+	
 	char* input = (char*) calloc(inputSize,sizeof(char));
 
-	fread(input, sizeof(char), inputSize, inputFile)
+	char* output = (char*) calloc(inputSize,sizeof(char));
 	
-	int outputSize = 0;
-
-	for (int i = 0; i < inputSize, i++) {
-		if !isVowel(input[i]) {
-			outputSize++;
-		}
+	while ((outputSize = fread(input, sizeof(char), inputSize, inputFile))) {
+	      fwrite(output, sizeof(char), copy_non_vowels(outputSize, input, output), outputFile);
 	}
 	
-	char* output = (char*) calloc(outputSize, sizeof(char));
 
-	copy_non_vowels(outputSize, input, output);
 
+	free(input);
+	free(output);
 }
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	FILE *inputFile;
 	FILE *outputFile;
@@ -65,7 +68,7 @@ void main(int argc, char *argv[]) {
 		case 2:
 			if ((inputFile = fopen(argv[1], "r")) == NULL)
 			{
-				print("input file not found");
+				printf("input file not found");
 				exit(0);
 			}
 			outputFile = stdout;
@@ -74,12 +77,12 @@ void main(int argc, char *argv[]) {
 		case 3:
 			if ((inputFile = fopen(argv[1], "r")) == NULL)
 			{
-				print("input file not found");
+				printf("input file not found");
 				exit(0);
 			}
 			if ((outputFile = fopen(argv[2], "w")) == NULL)
 			{
-				print("output file not found");
+				printf("output file not found");
 				exit(0);
 			}
 			break;
@@ -87,7 +90,8 @@ void main(int argc, char *argv[]) {
 
 	disemvowel(inputFile, outputFile);
 
+	fclose(inputFile);
+	fclose(outputFile);	
 	return 0;
 }
 
-void
