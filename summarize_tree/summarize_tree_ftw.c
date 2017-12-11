@@ -33,13 +33,14 @@ int main(int argc, char** argv) {
 
   num_dirs = 0;
   num_regular = 0;
+  int errcode;
 
-  if (ftw(argv[1], callback, MAX_FTW_DEPTH) != 0) {
+  if ((errcode = ftw(argv[1], callback, MAX_FTW_DEPTH)) != 0) {
     printf("FTW Error\n");
     return 1;
   }
 
-  printf("Number of directories: %d\n", num_dirs);
-  printf("Number of files: %d\n", num_regular);
+  printf("There were %d directories.\n", num_dirs);
+  printf("There were %d regular files.\n", num_regular);
   
 }
