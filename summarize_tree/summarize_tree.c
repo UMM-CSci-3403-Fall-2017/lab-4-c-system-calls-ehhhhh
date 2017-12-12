@@ -9,7 +9,18 @@
 static int num_dirs, num_regular;
 
 bool is_dir(const char* path) {
-  /*
+	
+       struct stat buf;
+       bool toReturn = false;
+
+	if (stat(path, &buf) == 0) {
+		toReturn = S_ISDIR(buf.st_mode);
+	}
+	
+	return toReturn;
+	
+       
+	/*
    * Use the stat() function (try "man 2 stat") to determine if the file
    * referenced by path is a directory or not.  Call stat, and then use
    * S_ISDIR to see if the file is a directory. Make sure you check the
@@ -25,7 +36,31 @@ bool is_dir(const char* path) {
 void process_path(const char*);
 
 void process_directory(const char* path) {
-  /*
+ 
+	DIR a_dir = opendir(path);
+	struct dirent* dirents;
+
+	if ((a_dir = opendir(path)) != NULL) {
+	  if (chdir(path) == 0) {
+	    while ((dirents = readdir(a_dir) != NULL) {
+		if (
+	      }
+	  }
+	}
+	
+	chdir(a_dir);
+
+	DIR new_dir;
+	while (a_dir) {
+		new_dir = readdir(a_dir);
+		if (is_dir(new_dir)) {
+			process_directory(new_dir);
+		}
+
+
+	}
+
+       	/*
    * Update the number of directories seen, use opendir() to open the
    * directory, and then use readdir() to loop through the entries
    * and process them. You have to be careful not to process the
